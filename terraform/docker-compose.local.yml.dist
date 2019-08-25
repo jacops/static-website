@@ -1,0 +1,32 @@
+version: '2.1'
+
+services:
+  terraform:
+    working_dir: /workspace/manifests
+    volumes:
+      - .:/workspace
+
+  terraform-init:
+    working_dir: /workspace/manifests
+    volumes:
+      - .:/workspace
+
+  backend-create:
+    extends:
+      service: aws-cli
+    command: "bin/backend/create.sh -b ${TERRAFORM_BACKEND_S3_BUCKET_NAME}"
+    working_dir: /workspace
+    volumes:
+      - .:/workspace
+
+  backend-destroy:
+    extends:
+      service: aws-cli
+    command: "bin/backend/destroy.sh -b ${TERRAFORM_BACKEND_S3_BUCKET_NAME}"
+    working_dir: /workspace
+    volumes:
+      - .:/workspace
+
+  letsencrypt:
+    volumes:
+      - "./certs:/etc/letsencrypt"

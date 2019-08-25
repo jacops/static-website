@@ -1,0 +1,7 @@
+version: '2.1'
+
+services:
+  terraform:
+    environment:
+      TF_VAR_environment: "${ENVIRONMENT:-test}"
+      TF_VAR_domain_name: "${DOMAIN_NAME}"

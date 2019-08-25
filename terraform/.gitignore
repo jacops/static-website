@@ -1,0 +1,10 @@
+.env
+.env-*
+.terraform
+manifests/terraform.tfvars*
+*.auto.tfvars
+tfplan
+website.tfstate
+
+docker-compose.local.yml
+certs

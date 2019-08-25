@@ -1,0 +1,43 @@
+version: '2.1'
+
+services:
+  terraform:
+    image: "${DOCKER_HUB:-}${DOCKER_IMAGE:-jacops-terraform-website}:${DOCKER_IMAGE_TAG:-latest}"
+    build:
+      context: .
+      args:
+        TERRAFORM_IMAGE: "${TERRAFORM_IMAGE:-hashicorp/terraform}"
+        TERRAFORM_IMAGE_TAG: "${TERRAFORM_IMAGE_TAG:-latest}"
+    environment:
+      AWS_ACCESS_KEY_ID: "${AWS_ACCESS_KEY_ID:-}"
+      AWS_SECRET_ACCESS_KEY: "${AWS_SECRET_ACCESS_KEY:-}"
+      AWS_DEFAULT_REGION: "${AWS_DEFAULT_REGION:-eu-west-2}"
+
+  terraform-init:
+    extends:
+      service: terraform
+    entrypoint: []
+    command: |
+      terraform init
+        -backend-config="bucket=${TERRAFORM_BACKEND_S3_BUCKET_NAME}"
+
+  aws-cli:
+    image: "${AWS_CLI_IMAGE:-mikesir87/aws-cli}:${AWS_CLI_IMAGE_TAG:-latest}"
+    environment:
+      AWS_ACCESS_KEY_ID: "${AWS_ACCESS_KEY_ID:-}"
+      AWS_SECRET_ACCESS_KEY: "${AWS_SECRET_ACCESS_KEY:-}"
+      AWS_DEFAULT_REGION: "${AWS_DEFAULT_REGION:-eu-west-2}"
+      
+  letsencrypt:
+    image: "${CERTBOT_IMAGE:-certbot/dns-route53}:${CERTBOT_IMAGE_TAG:-latest}"
+    command: |
+      certonly
+        --dns-route53
+        --non-interactive
+        --agree-tos
+        -m "${LETS_ENCRYPT_EMAIL}"
+        -d "${DOMAIN_NAME}"
+    environment:
+      AWS_ACCESS_KEY_ID: "${AWS_ACCESS_KEY_ID:-}"
+      AWS_SECRET_ACCESS_KEY: "${AWS_SECRET_ACCESS_KEY:-}"
+      AWS_DEFAULT_REGION: "${AWS_DEFAULT_REGION:-eu-west-2}"

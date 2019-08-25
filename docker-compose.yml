@@ -1,0 +1,14 @@
+version: "2.1"
+
+services:
+  aws-cli:
+    image: "${AWS_CLI_IMAGE:-mikesir87/aws-cli}:${AWS_CLI_IMAGE_TAG:-latest}"
+    environment:
+      AWS_ACCESS_KEY_ID: "${AWS_ACCESS_KEY_ID:-}"
+      AWS_SECRET_ACCESS_KEY: "${AWS_SECRET_ACCESS_KEY:-}"
+      AWS_DEFAULT_REGION: "${AWS_DEFAULT_REGION:-eu-west-2}"
+
+  deploy:
+    extends:
+      service: aws-cli
+    command: bin/deploy.sh -b ${DEPLOY_BUCKET_NAME}

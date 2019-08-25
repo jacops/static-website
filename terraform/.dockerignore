@@ -1,0 +1,9 @@
+.env.dist
+.terraform
+manifests/terraform.tfvars*
+*.auto.tfvars
+tfplan
+website.tfstate
+docker-compose*.yml
+Makefile
+certs
