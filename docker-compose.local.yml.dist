@@ -1,6 +1,11 @@
 version: '2.1'
 
 services:
+  build:
+    working_dir: /workspace
+    volumes:
+      - .:/workspace
+
   deploy:
     working_dir: /workspace
     volumes:
